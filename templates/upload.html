@@ -1,17 +1,22 @@
 <link rel="stylesheet" href="/static/style.css">
 
+<div class="navbar">
+    <div class="logo">𝒮onix</div>
+    <div>
+        <a href="/home">Home</a> |
+        <a href="/profile">Profile</a>
+    </div>
+    <div class="toggle" onclick="toggleMode()"></div>
+</div>
+
 <div class="container">
-    <h2>📷 Upload Photo</h2>
+    <h2>Upload Photo</h2>
 
     <form method="POST" enctype="multipart/form-data">
         <input type="file" name="photo" required>
-        <input name="caption" placeholder="Write a caption ✨">
+        <input name="caption" placeholder="Write a caption">
         <button type="submit">Upload</button>
     </form>
-
-    <p><a href="/home">🏠 Back to Home</a></p>
-
-    <div class="toggle" onclick="toggleMode()"></div>
 </div>
 
 <script>

@@ -1,8 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;500&display=swap');
 
 :root {
     --bg: linear-gradient(135deg, #f6f7fb, #e8ecff);
     --card: white;
-    --text: #333;
+    --text: #222;
     --input-bg: linear-gradient(135deg, #c7d2ff, #e0c3fc, #fbc2eb);
 }
 
@@ -15,91 +16,54 @@ body.dark {
 
 body {
     margin: 0;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Inter', sans-serif;
     background: var(--bg);
     color: var(--text);
 }
 
-/* Center container */
-.container {
-    width: 360px;
-    margin: 80px auto;
-    background: var(--card);
-    padding: 30px;
-    border-radius: 16px;
-    text-align: center;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-}
-
-/* Inputs */
-input {
-    width: 90%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 25px;
-    border: none;
-    background: var(--input-bg);
-    color: var(--text);
-    font-size: 14px;
-}
-
-/* Buttons */
-button {
-    width: 90%;
-    padding: 12px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 25px;
-    background: linear-gradient(135deg, #6a85ff, #b06ab3);
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
+/* Logo */
+.logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    letter-spacing: 2px;
 }
 
 /* Navbar */
 .navbar {
     background: var(--card);
-    padding: 12px 20px;
+    padding: 12px 25px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     border-bottom: 1px solid #ddd;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    z-index: 1000;
 }
 
-/* Posts */
-.post {
-    background: var(--card);
-    padding: 15px;
-    margin: 20px auto;
-    width: 420px;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-}
-
-.post img {
-    width: 100%;
-    border-radius: 10px;
-}
-
-/* Small toggle switch */
+/* Toggle */
 .toggle {
     position: relative;
-    width: 50px;
-    height: 26px;
+    width: 44px;
+    height: 24px;
     background: #ccc;
     border-radius: 50px;
     cursor: pointer;
-    margin: 10px auto;
+    margin-left: 15px;
 }
 
 .toggle::before {
     content: "";
     position: absolute;
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     background: white;
     border-radius: 50%;
     top: 2px;
-    left: 3px;
+    left: 2px;
     transition: 0.3s;
 }
 
@@ -108,77 +72,319 @@ body.dark .toggle {
 }
 
 body.dark .toggle::before {
-    transform: translateX(22px);
+    transform: translateX(20px);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*:root {
-    --bg: #fafafa;
-    --card: white;
-    --text: black;
+/* Layout */
+.layout {
+    display: flex;
+    margin-top: 90px;
 }
 
-body.dark {
-    --bg: #121212;
-    --card: #1e1e1e;
-    --text: white;
-}
-
-body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: Arial;
-    margin: 0;
-}
-
-.container {
-    width: 350px;
-    margin: 80px auto;
+/* Sidebar */
+.sidebar {
+    width: 240px;
     background: var(--card);
     padding: 20px;
+    min-height: calc(100vh - 90px);
+    position: sticky;
+    top: 90px;
+}
+
+.sidebar select {
+    width: 100%;
+    padding: 10px;
     border-radius: 8px;
-    text-align: center;
 }
 
-input, button {
-    width: 90%;
-    padding: 10px;
-    margin: 8px 0;
+/* Feed */
+.feed {
+    flex: 1;
+    padding: 30px;
 }
 
-.navbar {
-    background: var(--card);
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-}
 
+/* Post card */
 .post {
+    position: relative;
     background: var(--card);
-    padding: 10px;
-    margin: 20px auto;
-    width: 400px;
+    padding: 15px;
+    margin: 25px auto;
+    width: 420px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+
+/* Caption with scroll */
+.caption-text {
+    max-height: 160px;
+    overflow-y: auto;
+    padding-right: 5px;
+    line-height: 1.5;
+    white-space: normal;
+}
+
+/* Scrollbar styling */
+.caption-text::-webkit-scrollbar {
+    width: 6px;
+}
+
+.caption-text::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+
+/* Post */
+.post {
+    position: relative;
+    background: var(--card);
+    padding: 18px;
+    margin: 30px auto;
+    width: 420px;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
 }
 
 .post img {
     width: 100%;
+    border-radius: 10px;
 }
-*/
+
+.author {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Edit & Delete icons */
+.edit-btn {
+    position: absolute;
+    top: 12px;
+    right: 40px;
+    font-size: 18px;
+    color: #888;
+    cursor: pointer;
+}
+
+.edit-btn:hover {
+    color: #4e7cff;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    color: #888;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.delete-btn:hover {
+    color: red;
+}
+
+/* Like */
+.actions {
+    margin: 10px 0;
+}
+
+.like-btn {
+    font-size: 22px;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Create post */
+.create-box textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    margin-bottom: 12px;
+    background: var(--input-bg);
+    color: var(--text);
+}
+
+/* Upload spacing */
+.upload-row {
+    margin: 15px 0;
+}
+
+/* Inline edit form */
+.edit-form {
+    display: none;
+}
+
+.edit-form textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background: var(--input-bg);
+    color: var(--text);
+    margin: 10px 0;
+}
+
+/* Buttons */
+button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 25px;
+    border: none;
+    background: linear-gradient(135deg, #6a85ff, #b06ab3);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Forms */
+.container {
+    width: 360px;
+    margin: 100px auto;
+    background: var(--card);
+    padding: 30px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+input {
+    width: 90%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 25px;
+    border: none;
+    background: var(--input-bg);
+    color: var(--text);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .layout {
+        flex-direction: column;
+        margin-top: 80px;
+    }
+
+    .sidebar {
+        width: 100%;
+        position: relative;
+        top: 0;
+        min-height: auto;
+    }
+
+    .post, .container {
+        width: 90%;
+    }
+}
+
+
+
+/* Comments */
+.comments {
+    margin-top: 10px;
+}
+
+.comment {
+    font-size: 14px;
+    margin: 6px 0;
+    position: relative;
+}
+
+.comment strong {
+    margin-right: 6px;
+}
+
+.delete-comment {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 12px;
+    color: #888;
+    text-decoration: none;
+}
+
+.delete-comment:hover {
+    color: red;
+}
+
+.comment-form input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 20px;
+    border: none;
+    background: var(--input-bg);
+    color: var(--text);
+    margin-top: 8px;
+}
+
+.view-more {
+    font-size: 13px;
+    color: #888;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.view-more:hover {
+    text-decoration: underline;
+}
+
+[class^="hidden-comment-"] {
+    display: none;
+}
+
+/* Clear filter button */
+.clear-btn {
+    margin-top: 10px;
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    background: #888;
+    color: white;
+    cursor: pointer;
+}
+
+/* Sidebar search */
+.sidebar input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    border: none;
+    background: var(--input-bg);
+    color: var(--text);
+}
+
+/* Scrollable tag list */
+.tag-list {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* Tag items */
+.tag {
+    display: block;
+    padding: 8px;
+    margin-bottom: 4px;
+    text-decoration: none;
+    color: var(--text);
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.tag:hover {
+    background: rgba(0,0,0,0.08);
+}
+
+/* Scrollbar styling */
+.tag-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.tag-list::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+

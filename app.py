@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
-import re
+import uuid
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret123'
@@ -24,28 +24,26 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(200))
 
+
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     image = db.Column(db.String(200))
-    caption = db.Column(db.String(200))
+    caption = db.Column(db.String(300))
+    likes = db.Column(db.Integer, default=0)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String(200))
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# --------------------
-# Validation functions
-# --------------------
-def valid_username(username):
-    return re.match(r'^[a-zA-Z0-9_]{4,15}$', username)
-
-def valid_password(password):
-    return (
-        len(password) >= 6 and
-        re.search(r'[A-Za-z]', password) and
-        re.search(r'\d', password)
-    )
 
 # --------------------
 # Routes
@@ -68,68 +66,142 @@ def login():
 
     return render_template("login.html")
 
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         username = request.form["username"]
-        password = request.form["password"]
-
-        if not valid_username(username):
-            flash("Username must be 4–15 characters and only letters, numbers, underscore")
-            return redirect(url_for("register"))
-
-        if not valid_password(password):
-            flash("Password must be at least 6 characters with letters and numbers")
-            return redirect(url_for("register"))
+        password = generate_password_hash(request.form["password"])
 
         if User.query.filter_by(username=username).first():
             flash("Username already exists")
             return redirect(url_for("register"))
 
-        hashed_pw = generate_password_hash(password)
-        user = User(username=username, password=hashed_pw)
+        user = User(username=username, password=password)
         db.session.add(user)
         db.session.commit()
 
-        flash("Registration successful. Please login.")
         return redirect(url_for("login"))
 
     return render_template("register.html")
 
+
 @app.route("/home")
 @login_required
 def home():
-    posts = Post.query.all()
-    return render_template("home.html", posts=posts, user=current_user)
+    tag = request.args.get("tag")
+
+    if tag:
+        posts = Post.query.filter(
+            Post.caption.contains("#" + tag)
+        ).order_by(Post.id.desc()).all()
+    else:
+        posts = Post.query.order_by(Post.id.desc()).all()
+
+    comments = Comment.query.all()
+    users = User.query.all()
+
+    return render_template(
+        "home.html",
+        posts=posts,
+        comments=comments,
+        users=users,
+        user=current_user,
+        active_tag=tag
+    )
+
+
+@app.route("/create_post", methods=["POST"])
+@login_required
+def create_post():
+    caption = request.form.get("caption")
+    file = request.files.get("photo")
+
+    filename = None
+    if file and file.filename != "":
+        unique_name = str(uuid.uuid4()) + "_" + file.filename
+        filepath = os.path.join(app.config["UPLOAD_FOLDER"], unique_name)
+        file.save(filepath)
+        filename = unique_name
+
+    post = Post(image=filename, caption=caption, user_id=current_user.id)
+    db.session.add(post)
+    db.session.commit()
+
+    return redirect(url_for("home"))
+
+
+@app.route("/edit_post/<int:post_id>", methods=["POST"])
+@login_required
+def edit_post(post_id):
+    post = Post.query.get(post_id)
+
+    if post and post.user_id == current_user.id:
+        post.caption = request.form["caption"]
+        db.session.commit()
+
+    return redirect(url_for("home"))
+
+
+@app.route("/delete_post/<int:post_id>")
+@login_required
+def delete_post(post_id):
+    post = Post.query.get(post_id)
+
+    if post and post.user_id == current_user.id:
+        Comment.query.filter_by(post_id=post_id).delete()
+        db.session.delete(post)
+        db.session.commit()
+
+    return redirect(url_for("home"))
+
+
+@app.route("/like/<int:post_id>")
+@login_required
+def like(post_id):
+    post = Post.query.get(post_id)
+    post.likes += 1
+    db.session.commit()
+    return redirect(url_for("home"))
+
+
+# --------------------
+# COMMENT ROUTES
+# --------------------
+@app.route("/comment/<int:post_id>", methods=["POST"])
+@login_required
+def comment(post_id):
+    text = request.form.get("comment")
+
+    if text:
+        new_comment = Comment(
+            text=text,
+            post_id=post_id,
+            user_id=current_user.id
+        )
+        db.session.add(new_comment)
+        db.session.commit()
+
+    return redirect(url_for("home"))
+
+
+@app.route("/delete_comment/<int:comment_id>")
+@login_required
+def delete_comment(comment_id):
+    comment = Comment.query.get(comment_id)
+
+    if comment and comment.user_id == current_user.id:
+        db.session.delete(comment)
+        db.session.commit()
+
+    return redirect(url_for("home"))
+
 
 @app.route("/profile")
 @login_required
 def profile():
     return render_template("profile.html", user=current_user)
 
-@app.route("/messages")
-@login_required
-def messages():
-    return render_template("messages.html")
-
-@app.route("/upload", methods=["GET", "POST"])
-@login_required
-def upload():
-    if request.method == "POST":
-        file = request.files["photo"]
-        caption = request.form["caption"]
-
-        if file:
-            filepath = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
-            file.save(filepath)
-
-            post = Post(image=file.filename, caption=caption, user_id=current_user.id)
-            db.session.add(post)
-            db.session.commit()
-
-        return redirect(url_for("home"))
-
-    return render_template("upload.html")
 
 @app.route("/logout")
 @login_required
@@ -137,6 +209,9 @@ def logout():
     logout_user()
     return redirect(url_for("login"))
 
+
+# --------------------
+# START APP
 # --------------------
 if __name__ == "__main__":
     with app.app_context():

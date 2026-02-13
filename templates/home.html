@@ -1,25 +1,259 @@
-<link rel="stylesheet" href="/static/style.css">
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
 
 <div class="navbar">
-    <b>📸 MiniInstagram</b>
+    <div class="logo">𝒮onix</div>
     <div>
-        <a href="/upload">➕ Upload</a> |
-        <a href="/profile">👤 Profile</a> |
-        <a href="/logout">🚪 Logout</a>
+        <a href="/profile">Profile</a> |
+        <a href="/logout">Logout</a>
+    </div>
+    <div class="toggle" onclick="toggleMode()"></div>
+</div>
+
+<div class="layout">
+
+    
+   <!-- Sidebar with search + scroll -->
+<div class="sidebar">
+    <label>Music Tag</label>
+
+    <!-- Search box -->
+    <input type="text" id="tagSearch" placeholder="Search tag...">
+
+    <!-- Scrollable tag list -->
+    <div class="tag-list" id="tagList">
+        <a href="/home" class="tag">All</a>
+        <a href="/home?tag=classical" class="tag">Classical</a>
+        <a href="/home?tag=jazz" class="tag">Jazz</a>
+        <a href="/home?tag=rock" class="tag">Rock</a>
+        <a href="/home?tag=pop" class="tag">Pop</a>
+        <a href="/home?tag=1991's" class="tag">1991's</a>
+        <a href="/home?tag=hiphop" class="tag">Hip Hop</a>
+        <a href="/home?tag=electronic" class="tag">Electronic</a>
+        <a href="/home?tag=folk" class="tag">Folk</a>
+        <a href="/home?tag=blues" class="tag">Blues</a>
+        <a href="/home?tag=country" class="tag">Country</a>
+        <a href="/home?tag=metal" class="tag">Metal</a>
+        <a href="/home?tag=reggae" class="tag">Reggae</a>
+        <a href="/home?tag=lofi" class="tag">Lo-fi</a>
+        <a href="/home?tag=indie" class="tag">Indie</a>
+        <a href="/home?tag=techno" class="tag">Techno</a>
+        <a href="/home?tag=old" class="tag">Old</a>
+        <a href="/home?tag=melodies" class="tag">Melodies</a>
+        
     </div>
 </div>
 
-<div class="toggle" onclick="toggleMode()"></div>
 
-{% for post in posts %}
-<div class="post">
-    <img src="/static/uploads/{{ post.image }}">
-    <p>💬 {{ post.caption }}</p>
+
+    <!-- Feed -->
+    <div class="feed">
+
+        <!-- Create Post -->
+        <div class="post create-box">
+            <form action="/create_post" method="POST" enctype="multipart/form-data">
+                <textarea name="caption" placeholder="Share something..."></textarea>
+                <div class="upload-row">
+                    <input type="file" name="photo">
+                </div>
+                <button type="submit">Post</button>
+            </form>
+        </div>
+
+  <!-- No posts message -->
+        {% if posts|length == 0 and active_tag %}
+            <div class="post">
+                <p>No posts related to <strong>{{ active_tag }}</strong></p>
+            </div>
+        {% endif %}
+
+
+
+        <!-- Posts -->
+        {% for post in posts %}
+        <div class="post">
+
+            <!-- Author -->
+            <p class="author">
+                {% for u in users %}
+                    {% if u.id == post.user_id %}
+                        {{ u.username }}
+                    {% endif %}
+                {% endfor %}
+            </p>
+
+            {% if post.user_id == user.id %}
+                <span class="edit-btn" data-post="{{ post.id }}">✎</span>
+                <a href="/delete_post/{{ post.id }}" class="delete-btn">✖</a>
+            {% endif %}
+
+            {% if post.image %}
+                <img src="/static/uploads/{{ post.image }}">
+            {% endif %}
+
+            <p id="caption-{{ post.id }}" class="caption-text">
+                {{ post.caption | replace('\n', '<br>') | safe }}
+            </p>
+
+            <form id="edit-form-{{ post.id }}" class="edit-form"
+                  action="/edit_post/{{ post.id }}" method="POST">
+                <textarea name="caption">{{ post.caption }}</textarea>
+                <button type="submit">Save</button>
+            </form>
+
+            <div class="actions">
+                <a href="/like/{{ post.id }}" class="like-btn">♥ {{ post.likes }}</a>
+            </div>
+
+            <!-- COMMENTS -->
+            <div class="comments">
+
+                {% set post_comments = comments | selectattr("post_id", "equalto", post.id) | list %}
+
+                {% for c in post_comments[:2] %}
+                <div class="comment">
+                    <strong>
+                        {% for u in users %}
+                            {% if u.id == c.user_id %}
+                                {{ u.username }}
+                            {% endif %}
+                        {% endfor %}
+                    </strong>
+                    {{ c.text }}
+
+                    {% if c.user_id == user.id %}
+                        <a href="/delete_comment/{{ c.id }}" class="delete-comment">✖</a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <!-- Hidden comments -->
+                {% if post_comments|length > 2 %}
+                    <div class="more-comments" id="more-{{ post.id }}" style="display:none;">
+                        {% for c in post_comments[2:] %}
+                        <div class="comment">
+                            <strong>
+                                {% for u in users %}
+                                    {% if u.id == c.user_id %}
+                                        {{ u.username }}
+                                    {% endif %}
+                                {% endfor %}
+                            </strong>
+                            {{ c.text }}
+
+                            {% if c.user_id == user.id %}
+                                <a href="/delete_comment/{{ c.id }}" class="delete-comment">✖</a>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <a href="#" class="view-more" data-post="{{ post.id }}">
+                        View more comments
+                    </a>
+                {% endif %}
+            </div>
+
+            <!-- Comment form -->
+            <form class="comment-form" data-post="{{ post.id }}">
+                <input type="text" name="comment" placeholder="Write a comment..." required>
+            </form>
+
+        </div>
+        {% endfor %}
+    </div>
 </div>
-{% endfor %}
 
 <script>
 function toggleMode(){
     document.body.classList.toggle("dark");
+    localStorage.setItem("mode",
+        document.body.classList.contains("dark") ? "dark" : "light");
 }
+
+window.onload = function(){
+    if(localStorage.getItem("mode") === "dark"){
+        document.body.classList.add("dark");
+    }
+};
+
+function filterTag(tag){
+    if(tag === ""){
+        window.location.href = "/home";
+    } else {
+        window.location.href = "/home?tag=" + tag;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    /* Edit toggle */
+    document.querySelectorAll(".edit-btn").forEach(btn => {
+        btn.addEventListener("click", function(){
+            let postId = this.getAttribute("data-post");
+            let form = document.getElementById("edit-form-" + postId);
+            let caption = document.getElementById("caption-" + postId);
+
+            form.style.display = form.style.display === "block" ? "none" : "block";
+            caption.style.display = caption.style.display === "none" ? "block" : "none";
+        });
+    });
+
+    /* View more comments */
+    document.querySelectorAll(".view-more").forEach(btn => {
+        btn.addEventListener("click", function(e){
+            e.preventDefault();
+            let postId = this.getAttribute("data-post");
+            let more = document.getElementById("more-" + postId);
+
+            more.style.display = "block";
+            this.style.display = "none";
+        });
+    });
+
+    /* AJAX comment submit */
+    document.querySelectorAll(".comment-form").forEach(form => {
+        form.addEventListener("submit", function(e){
+            e.preventDefault();
+
+            let postId = this.getAttribute("data-post");
+            let input = this.querySelector("input[name='comment']");
+            let text = input.value;
+
+            fetch("/comment/" + postId, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "comment=" + encodeURIComponent(text)
+            })
+            .then(() => {
+                input.value = "";
+                location.reload();
+            });
+        });
+    });
+
+});
+
+
+
+/* Sidebar tag search */
+document.getElementById("tagSearch").addEventListener("keyup", function() {
+    let filter = this.value.toLowerCase();
+    let tags = document.querySelectorAll("#tagList .tag");
+
+    tags.forEach(tag => {
+        let text = tag.textContent.toLowerCase();
+        tag.style.display = text.includes(filter) ? "block" : "none";
+    });
+});
+
 </script>
+
+</body>
+</html>

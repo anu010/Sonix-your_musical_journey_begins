@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="/static/style.css">
+
+<div class="navbar">
+    <div class="logo">𝒮onix</div>
+</div>
+
+<div class="layout">
+    <div class="feed">
+        <div class="post create-box">
+            <form method="POST">
+                <textarea name="caption">{{ post.caption }}</textarea>
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+ <!-- Sidebar -->
+    <div class="sidebar">
+        <label>Tag Selection</label>
+        <select onchange="filterTag(this.value)">
+        <option value="" {% if not active_tag %}selected{% endif %}>All</option> 
+        <option value="classical" {% if active_tag == "classical" %}selected{% endif %}>Classical</option> 
+        <option value="jazz" {% if active_tag == "jazz" %}selected{% endif %}>Jazz</option> 
+        <option value="rock" {% if active_tag == "rock" %}selected{% endif %}>Rock</option> 
+        <option value="pop" {% if active_tag == "pop" %}selected{% endif %}>Pop</option> 
+        <option value="hiphop" {% if active_tag == "hiphop" %}selected{% endif %}>Hip Hop</option> 
+        <option value="electronic" {% if active_tag == "electronic" %}selected{% endif %}>Electronic</option> 
+        <option value="folk" {% if active_tag == "folk" %}selected{% endif %}>Folk</option> 
+        <option value="blues" {% if active_tag == "blues" %}selected{% endif %}>Blues</option> 
+        <option value="country" {% if active_tag == "country" %}selected{% endif %}>Country</option> 
+        <option value="metal" {% if active_tag == "metal" %}selected{% endif %}>Metal</option>
+        <option value="old" {% if active_tag == "old" %}selected{% endif %}>Old</option>
+        <option value="melodies" {% if active_tag == "melodies" %}selected{% endif %}>Melodies</option>
+        <option value="1991's" {% if active_tag == "1991's" %}selected{% endif %}>1991's</option>
+     </select>
+    </div>
