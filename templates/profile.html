@@ -1,4 +1,17 @@
-<h1>Your Profile</h1>
-<p>Username: {{ user.username }}</p>
-<a href="/home">Back to Home</a> |
-<a href="/logout">Logout</a>
+<link rel="stylesheet" href="/static/style.css">
+
+<div class="container">
+    <h2>👤 Profile</h2>
+    <p><b>Username:</b> {{ user.username }}</p>
+
+    <a href="/home">🏠 Home</a><br><br>
+    <a href="/logout">🚪 Logout</a>
+
+    <div class="toggle" onclick="toggleMode()"></div>
+</div>
+
+<script>
+function toggleMode(){
+    document.body.classList.toggle("dark");
+}
+</script>

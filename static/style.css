@@ -1,4 +1,136 @@
+
 :root {
+    --bg: linear-gradient(135deg, #f6f7fb, #e8ecff);
+    --card: white;
+    --text: #333;
+    --input-bg: linear-gradient(135deg, #c7d2ff, #e0c3fc, #fbc2eb);
+}
+
+body.dark {
+    --bg: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    --card: #1e1e2f;
+    --text: #f5f5f5;
+    --input-bg: linear-gradient(135deg, #3a3a52, #4e4376);
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* Center container */
+.container {
+    width: 360px;
+    margin: 80px auto;
+    background: var(--card);
+    padding: 30px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* Inputs */
+input {
+    width: 90%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 25px;
+    border: none;
+    background: var(--input-bg);
+    color: var(--text);
+    font-size: 14px;
+}
+
+/* Buttons */
+button {
+    width: 90%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #6a85ff, #b06ab3);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Navbar */
+.navbar {
+    background: var(--card);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Posts */
+.post {
+    background: var(--card);
+    padding: 15px;
+    margin: 20px auto;
+    width: 420px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+
+.post img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+/* Small toggle switch */
+.toggle {
+    position: relative;
+    width: 50px;
+    height: 26px;
+    background: #ccc;
+    border-radius: 50px;
+    cursor: pointer;
+    margin: 10px auto;
+}
+
+.toggle::before {
+    content: "";
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 3px;
+    transition: 0.3s;
+}
+
+body.dark .toggle {
+    background: #4e4376;
+}
+
+body.dark .toggle::before {
+    transform: translateX(22px);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*:root {
     --bg: #fafafa;
     --card: white;
     --text: black;
@@ -49,3 +181,4 @@ input, button {
 .post img {
     width: 100%;
 }
+*/

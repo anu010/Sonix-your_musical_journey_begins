@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="/static/style.css">
 
 <div class="container">
-    <h2>Register</h2>
+    <h2>💜 Create Account</h2>
 
     {% with messages = get_flashed_messages() %}
         {% for msg in messages %}
@@ -10,13 +10,14 @@
     {% endwith %}
 
     <form method="POST">
-        <input name="username" placeholder="Username (4–15 chars)" required>
-        <input name="password" type="password" placeholder="Password (min 6 chars)" required>
+        <input name="username" placeholder="👤 Username (4–15 chars)" required>
+        <input name="password" type="password" placeholder="🔒 Password (min 6 chars)" required>
         <button type="submit">Register</button>
     </form>
 
     <p><a href="/">Back to login</a></p>
-    <button onclick="toggleMode()">Toggle Dark/Light</button>
+
+    <div class="toggle" onclick="toggleMode()"></div>
 </div>
 
 <script>

@@ -1,20 +1,20 @@
 <link rel="stylesheet" href="/static/style.css">
 
 <div class="navbar">
-    <b>MiniInstagram</b>
+    <b>📸 MiniInstagram</b>
     <div>
-        <a href="/upload">Upload</a> |
-        <a href="/profile">Profile</a> |
-        <a href="/logout">Logout</a>
+        <a href="/upload">➕ Upload</a> |
+        <a href="/profile">👤 Profile</a> |
+        <a href="/logout">🚪 Logout</a>
     </div>
 </div>
 
-<button onclick="toggleMode()">Toggle Dark/Light</button>
+<div class="toggle" onclick="toggleMode()"></div>
 
 {% for post in posts %}
 <div class="post">
     <img src="/static/uploads/{{ post.image }}">
-    <p>{{ post.caption }}</p>
+    <p>💬 {{ post.caption }}</p>
 </div>
 {% endfor %}
 

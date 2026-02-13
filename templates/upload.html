@@ -1,9 +1,21 @@
-<h1>Upload Photo</h1>
+<link rel="stylesheet" href="/static/style.css">
 
-<form method="POST" enctype="multipart/form-data">
-    <input type="file" name="photo"><br><br>
-    <input name="caption" placeholder="Caption"><br><br>
-    <button type="submit">Upload</button>
-</form>
+<div class="container">
+    <h2>📷 Upload Photo</h2>
 
-<a href="/home">Back to Home</a>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="photo" required>
+        <input name="caption" placeholder="Write a caption ✨">
+        <button type="submit">Upload</button>
+    </form>
+
+    <p><a href="/home">🏠 Back to Home</a></p>
+
+    <div class="toggle" onclick="toggleMode()"></div>
+</div>
+
+<script>
+function toggleMode(){
+    document.body.classList.toggle("dark");
+}
+</script>
