@@ -1,0 +1,51 @@
+:root {
+    --bg: #fafafa;
+    --card: white;
+    --text: black;
+}
+
+body.dark {
+    --bg: #121212;
+    --card: #1e1e1e;
+    --text: white;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: Arial;
+    margin: 0;
+}
+
+.container {
+    width: 350px;
+    margin: 80px auto;
+    background: var(--card);
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+input, button {
+    width: 90%;
+    padding: 10px;
+    margin: 8px 0;
+}
+
+.navbar {
+    background: var(--card);
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.post {
+    background: var(--card);
+    padding: 10px;
+    margin: 20px auto;
+    width: 400px;
+}
+
+.post img {
+    width: 100%;
+}
